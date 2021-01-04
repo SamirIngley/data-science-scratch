@@ -24,3 +24,4 @@ def correlation(xs: List[float], ys: List[float]) -> float:
 
 # Simpson's Paradox 
 # correlations can be misleading when confounding variables are ignored.
+# https://www.youtube.com/watch?v=wgLUDw8eLB4

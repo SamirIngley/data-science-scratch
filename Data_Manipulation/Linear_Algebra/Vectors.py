@@ -4,6 +4,19 @@
 # if you have the heights, weights, and ages of a number of people, you can treat your data as three-dimensional vectors [height, weight, age]
 # if you're teaching a class with 4 exams, you can treat student grades as four dimensional vectors [exam1, exam2, exam3, exam4]
 
+# Eddie Woo: Matrix Multiplication
+# A * B != B * A ORDER MATTERS
+# "Dot Multplication" -> scalar product
+# "Cross Multiplication" -> cross product / vector product (several numbers) 
+# for example if you have sell sushi. Each sushi has a price. You know how much you sell each day of the week.
+# prices: chk eel avo  quantity: M T W R F
+         #[$3 $4 $5]        chk [6 7 8 9 1]
+                           #eel [7 5 9 5 2]
+                           #avo [8 9 1 0 3]
+
+# so to dot multiplication, we have to take 6, 7, 8 and multiply with prices respectively, then sum them. (dot product)
+# to do cross multiplication, we take each of the sums from above and put each in its own matrix. 
+
 from typing import List
 
 # > A type alias is defined by assigning the type to the alias. In this example, Vector and list[float] will be treated as interchangeable synonyms:
@@ -65,7 +78,6 @@ assert scalar_multiply(2, [1, 2, 3]) == [2, 4, 6]
 
 
 # compute the componentwise mean for a list of (same sized) vectors
-
 def vector_mean(vectors: List[Vector]) -> Vector:
     ''' Computes the element wise average '''
     n = len(vectors)
@@ -74,11 +86,41 @@ def vector_mean(vectors: List[Vector]) -> Vector:
 assert vector_mean([[1, 2], [3, 4], [5, 6]]) == [3, 4]
 
 # DOT PRODUCT of two vectors is the sum of their componentwise products
-
-def dot(vec1: Vector, vec2: Vector) -> float:
+def dot(v: Vector, w: Vector) -> float:
     ''' Computes v1[0]*v2[0] + v1[1]*v2[1] + ... v1[n]*v2[n] '''
-    assert len(vec1) == len(vec2)
-    return sum(i*j for i, j in zip(vec1, vec2))
+    assert len(v) == len(w)
+    return sum(i*j for i, j in zip(v, w))
 
 assert dot([1, 2, 3], [4, 5, 6]) == 32
+
+# Using dot product, easy to compute a vector's sum of squares
+def sum_of_squares(v: Vector) -> float:
+    ''' Returns v_1 * v_1 + ... + v_n * v_n ''' 
+    return dot(v, v)
+
+assert sum_of_squares([1, 2, 3]) == 14
+
+# which we can use to compute its magnitude (length)
+import math
+
+def magnitude(v: Vector) -> float:
+    ''' Returns the magnitude (or length) of v '''
+    return math.sqrt(sum_of_squares(v))
+
+assert magnitude([3, 4]) == 52
+
+# We now have all the pieces we need to compute the distance between two vectors, defined as:
+# Sqrt( (v1-w1)**2 + ... + (vn - wn)**2 )
+
+def squared_distance(v: Vector, w: Vector) -> float:
+    ''' Computes (v_1 - w_1) ** 2 + ... + (v_n - w_n) ** 2 ''' 
+    return sum_of_squares(subtract(v,w))
+
+def distance(v: Vector, w: Vector) -> float:
+    ''' Computes the distance between v and w ''' 
+    return magnitude(subtract(v, w))
+
+# Using lists as vectors is great for exposition but terrible for performance
+# In production, you would want to use the NumPy library, which includes a high-performance
+# array class with all sorts of arithmetic operations included
 
